@@ -17,12 +17,12 @@ RUN cd /app/gcpdiag &&\
 COPY . /app/gcpdiag
 # RUN ls /app/gcpdiag
 ENV PYTHONPATH=/app/gcpdiag
-ENV SECRET=/app/gcpdiag/cloud-run-test-key
+ENV SECRET=/app/gcpdiag/credentials.json
 
 # CMD ["python3", "/app/gcpdiag/bin/gcpdiag"]
 # RUN cd /app/gcpdiag/bin
 WORKDIR /app/gcpdiag
-CMD gunicorn --timeout 60 --bind :8000 bin.wsgi:app
+CMD gunicorn --workers 1 --threads 8 --timeout 0 --bind :8000 bin.wsgi:app
 
 EXPOSE 8000
 
