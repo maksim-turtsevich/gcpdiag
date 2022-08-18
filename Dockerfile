@@ -17,8 +17,8 @@ RUN cd /app/gcpdiag &&\
 COPY . /app/gcpdiag
 # RUN ls /app/gcpdiag
 ENV PYTHONPATH=/app/gcpdiag
-ENV SECRET=/app/gcpdiag/gcp-coe-msp-sandbox-1e6925f0bd5c.json
-ENV jira_token=fo8B7aXWn4C1N7D9b4Ad9325
+ENV SECRET=/app/gcpdiag/credentials.json
+ENV jira_token=EQ94WCe2wYO2J3xgqzXy58F0
 
 # CMD ["python3", "/app/gcpdiag/bin/gcpdiag"]
 # RUN cd /app/gcpdiag/bin
