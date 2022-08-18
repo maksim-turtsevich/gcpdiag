@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# Allow files and directories
+!/Pipfile
+!/Pipfile.lock
+!/bin
+!/gcpdiag
+!/gcp-coe-msp-sandbox-1e6925f0bd5c.json
