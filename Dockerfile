@@ -18,7 +18,6 @@ COPY . /app/gcpdiag
 # RUN ls /app/gcpdiag
 ENV PYTHONPATH=/app/gcpdiag
 ENV SECRET=/app/gcpdiag/credentials.json
-ENV jira_token=EQ94WCe2wYO2J3xgqzXy58F0
 
 # CMD ["python3", "/app/gcpdiag/bin/gcpdiag"]
 # RUN cd /app/gcpdiag/bin
