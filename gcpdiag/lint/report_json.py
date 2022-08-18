@@ -58,6 +58,16 @@ class LintReportJson(lint.LintReport):
             },
             ensure_ascii=False,
             indent=2) + ',')
+    
+    self.list_with_rules.append({
+                'rule': rule_id,
+                'resource': resource.full_path if resource else '-',
+                'status': status,
+                'message': message,
+                'short_message': rule.short_desc,
+                'long_message': rule.long_desc,
+                'doc_url': rule.doc_url
+            })
 
   def add_skipped(self, rule: lint.LintRule, context: models.Context,
                   resource: Optional[models.Resource], reason: str,

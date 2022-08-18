@@ -21,11 +21,33 @@ import logging
 import pkgutil
 import re
 import sys
+import os
 
 from gcpdiag import config, hooks, lint, models
 from gcpdiag.lint import report_csv, report_json, report_terminal
 from gcpdiag.queries import apis
 
+dict_with_vals = {
+                  'auth_adc': False, 
+                  'auth_key': os.getenv("SECRET"), 
+                  'auth_oauth': False, 
+                  'project': 'gcp-coe-msp-sandbox', 
+                  'billing_project': None, 
+                  'show_skipped': False, 
+                  'hide_ok': True, 
+                  'include': None, 
+                  'exclude': None, 
+                  'include_extended': False, 
+                  'verbose': 0, 
+                  'within_days': 3, 
+                  'config': None, 
+                  'logging_ratelimit_requests': None, 
+                  'logging_ratelimit_period_seconds': None, 
+                  'logging_page_size': None, 
+                  'logging_fetch_max_entries': None, 
+                  'logging_fetch_max_time_seconds': None, 
+                  'output': 'json'
+                  }
 
 def _flatten_multi_arg(arg_list):
   """Flatten a list of comma-separated values, like:
@@ -213,21 +235,24 @@ def _initialize_output_formater() -> lint.LintReport:
   return report
 
 
-def run(argv) -> int:
-  del argv
+def run(project) -> int:
+  # del argv
 
   # Initialize argument parser
-  parser = _init_args_parser()
-  args = parser.parse_args()
+  # parser = _init_args_parser()
+  # args = parser.parse_args()
+  # print(f"args: {args}")
+  # print(f"var_args: {vars(args)}")
+  dict_with_vals["project"] = project
 
   # Allow to change defaults using a hook function.
-  hooks.set_lint_args_hook(args)
+  # hooks.set_lint_args_hook(args)
 
   # Initialize Context.
-  context = models.Context(project_id=args.project)
+  context = models.Context(project_id=dict_with_vals["project"])
 
   # Initialize configuration
-  config.init(vars(args), context.project_id, report_terminal.is_cloud_shell())
+  config.init(dict_with_vals, context.project_id, report_terminal.is_cloud_shell())
 
   # Rules name patterns that shall be included or excluded
   include_patterns = _parse_rule_patterns(config.get('include'))
@@ -235,16 +260,16 @@ def run(argv) -> int:
 
   # Initialize Repository, and Tests.
   repo = lint.LintRuleRepository(config.get('include_extended'))
-  _load_repository_rules(repo)
+  _load_repository_rules(repo) # Load rules (with name, id, rule, class, exec_func, prep_func, etc.)
 
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-required-files
 
   # Initialize proper output formater
-  report = _initialize_output_formater()
+  report = _initialize_output_formater() # Initialization of output formatter
 
   # Logging setup.
-  logging_handler = report.get_logging_handler()
+  logging_handler = report.get_logging_handler() # getting logging.Handler class
   logger = logging.getLogger()
   # Make sure we are only using our own handler
   logger.handlers = []
@@ -273,9 +298,11 @@ def run(argv) -> int:
   apis.verify_access(context.project_id)
 
   # Run the tests.
-  exit_code = repo.run_rules(context, report, include_patterns,
-                             exclude_patterns)
-  hooks.post_lint_hook(report)
+  exit_code, data = repo.run_rules(context, report, include_patterns,
+                             exclude_patterns) # context (Class with project name)
+                                               # report output_formatter (json class)
+                                               # repo (storage of rules)
+  # hooks.post_lint_hook(report)
 
   # Exit 0 if there are no failed rules.
-  sys.exit(exit_code)
+  return data

@@ -92,6 +92,7 @@ class LintReport(abc.ABC):
     self.log_info_for_progress_only = log_info_for_progress_only
     self.rule_has_results = False
     self.rules_report = {}
+    self.list_with_rules = []
 
   def rule_start(self, rule: LintRule, context: models.Context):
     """Called when a rule run is started with a context."""
@@ -308,7 +309,7 @@ class LintRuleRepository:
     # Skip code tests
     if name.endswith('_test'):
       raise NotLintRule()
-
+    print(name)
     # Determine Lint Rule parameters based on the module name.
     m = re.search(
         r"""
@@ -367,14 +368,14 @@ class LintRuleRepository:
       long_desc = '\n'.join(doc_lines[2:])
 
     # Instantiate the LintRule object and register it
-    rule = LintRule(product=product,
-                    rule_class=LintRuleClass(rule_class.upper()),
-                    rule_id=rule_id,
-                    run_rule_f=run_rule_f,
-                    prepare_rule_f=prepare_rule_f,
-                    prefetch_rule_f=prefetch_rule_f,
-                    short_desc=short_desc,
-                    long_desc=long_desc)
+    rule = LintRule(product=product, # Product Name (str)
+                    rule_class=LintRuleClass(rule_class.upper()), # LintRuleClass.WARN || WARN
+                    rule_id=rule_id, # 2021_005
+                    run_rule_f=run_rule_f, # function for running rule
+                    prepare_rule_f=prepare_rule_f, # function for preparing rule
+                    prefetch_rule_f=prefetch_rule_f, # function for prefetching rule
+                    short_desc=short_desc, # starting description
+                    long_desc=long_desc) # long description
     return rule
 
   def load_rules(self, pkg):
@@ -438,8 +439,13 @@ class LintRuleRepository:
         logging.warning('%s: %s while processing rule: %s',
                         type(err).__name__, err, rule)
         report.add_skipped(rule, context, None, f'Error: {err}', None)
+      
+      # print(report.rules_report)
       report.rule_end(rule, context)
-    return report.finish(context)
+
+    # print(f"==========================================={report.list_with_rules}")  
+    data = report.list_with_rules
+    return report.finish(context), data
 
   def list_rules(
       self,
