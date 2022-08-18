@@ -4,7 +4,7 @@ FROM python:3.9-slim
 RUN pip install pipenv &&\
     mkdir -p /app/gcpdiag
 
-COPY Pipfile Pipfile.lock /app/gcpdiag
+COPY Pipfile Pipfile.lock /app/gcpdiag/
 RUN cd /app/gcpdiag &&\
     pipenv install --system &&\
     pip install flask &&\
