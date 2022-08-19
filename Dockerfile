@@ -15,6 +15,7 @@ RUN cd /app/gcpdiag &&\
 
 # COPY ./gcp-coe-msp-sandbox-1e6925f0bd5c.json /app
 COPY . /app/gcpdiag
+RUN mkdir -p ~/.cache/gcpdiag
 # RUN ls /app/gcpdiag
 ENV PYTHONPATH=/app/gcpdiag
 ENV SECRET=/app/gcpdiag/cloud-run-test-key/cloud-run-test-key
