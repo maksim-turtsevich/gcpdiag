@@ -17,7 +17,7 @@ RUN cd /app/gcpdiag &&\
 COPY . /app/gcpdiag
 # RUN ls /app/gcpdiag
 ENV PYTHONPATH=/app/gcpdiag
-ENV SECRET=/app/gcpdiag/credentials.json
+ENV SECRET=/app/gcpdiag/cloud-run-test-key
 
 # CMD ["python3", "/app/gcpdiag/bin/gcpdiag"]
 # RUN cd /app/gcpdiag/bin
