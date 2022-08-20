@@ -16,3 +16,4 @@ website/public
 website/resources
 crash.*.log
 gcp-coe-msp-sandbox-1e6925f0bd5c.json
+Dockerfile-Test

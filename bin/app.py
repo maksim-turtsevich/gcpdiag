@@ -118,9 +118,9 @@ def request_handler():
     
     return final_text
   
-  unsupported_fields = unsupported_fields(request_payload)
-  empty_text = f"Unfortunately the following resources: {unsupported_fields} are not supported by gcpdiag or they weren't found \
-    on the customer account :("
+  absent_fields = unsupported_fields(request_payload)
+  empty_text = f"Unfortunately the following resources: {absent_fields} weren't found on the customer account or\
+  they are not supported by gcpdiag :(\n"
   submit_to_jira(request_payload["issue"]["key"], empty_text)
 
   return empty_text
