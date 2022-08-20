@@ -86,7 +86,7 @@ def filtering(request, final_data):
   filtered_lst_of_rules = []
 
   lst_of_dicts = request["issue"]["fields"]["customfield_10141"]
-  lst_of_needed_resources = {resource_map[resource["value"]][0] for resource in lst_of_dicts}
+  lst_of_needed_resources = {resource_map.get(resource["value"])[0] for resource in lst_of_dicts if resource_map.get(resource["value"])[0]}
 
   for res in lst_of_needed_resources:
 
@@ -94,10 +94,10 @@ def filtering(request, final_data):
       if res in rule["rule"]:
         filtered_lst_of_rules.append(rule)
 
-
   return filtered_lst_of_rules
 
-
+def unsupported_fields(request):
+  return [res["value"] for res in request["issue"]["fields"]["customfield_10141"]]
 
 @app.route("/", methods=["POST", "GET"])
 def request_handler():
@@ -109,15 +109,21 @@ def request_handler():
   project = request_payload["issue"]["fields"]["customfield_10169"]
 
   final_data = lint_command.run(project)
-
   filtered_data = filtering(request_payload, final_data)
-  grouped_data = grouping(filtered_data)
 
-  final_text = composing_text(grouped_data)
-  submit_to_jira(request_payload["issue"]["key"], final_text)
+  if filtered_data:
+    grouped_data = grouping(filtered_data)
+    final_text = composing_text(grouped_data)
+    submit_to_jira(request_payload["issue"]["key"], final_text)
+    
+    return final_text
+  
+  unsupported_fields = unsupported_fields(request_payload)
+  empty_text = f"Unfortunately the following resources: {unsupported_fields} are not supported by gcpdiag or they weren't found \
+    on the customer account :("
+  submit_to_jira(request_payload["issue"]["key"], empty_text)
 
-  return final_text
-
+  return empty_text
 
 def main(project):
   # A very simple command-line parser to determine what subcommand is called.
