@@ -28,8 +28,9 @@ from gcpdiag.lint import report_csv, report_json, report_terminal
 from gcpdiag.queries import apis
 
 dict_with_vals = {
-                  'auth_adc': False, 
-                  'auth_key': os.getenv("SECRET"), 
+                  'auth_adc': True, 
+                  # 'auth_key': os.getenv("SECRET"), 
+                  'auth_key': False,
                   'auth_oauth': False, 
                   'project': 'gcp-coe-msp-sandbox', 
                   'billing_project': None, 
