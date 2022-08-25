@@ -3,7 +3,8 @@ FROM python:3.9-slim
 # Add pipenv.
 RUN pip install pipenv &&\
     mkdir -p /app/gcpdiag &&\
-    mkdir -p ~/.cache/gcpdiag
+    mkdir -p ~/.cache/gcpdiag &&\
+    mkdir -p /tmp/.cache/gcpdiag
 
 COPY Pipfile Pipfile.lock /app/gcpdiag/
 RUN cd /app/gcpdiag &&\
