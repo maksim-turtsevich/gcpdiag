@@ -108,6 +108,16 @@ def request_handler():
   request_payload = request.json
   project = request_payload["issue"]["fields"]["customfield_10169"]
 
+  try:
+    print(os.path.exists("/tmp/.cache/gcpdiag"))
+    print("Reading: ", os.access('my_folder', os.R_OK)) # Check for read access
+
+    print("Writing", os.access('my_folder', os.W_OK))
+
+    print("Execution:", os.access('my_folder', os.X_OK)) # Check for execution  
+  except:
+    raise Exception
+
   final_data = lint_command.run(project)
   filtered_data = filtering(request_payload, final_data)
 
