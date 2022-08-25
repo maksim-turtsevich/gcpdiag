@@ -20,7 +20,7 @@ ENV PYTHONPATH=/app/gcpdiag
 ENV SECRET=/app/gcpdiag/cloud-run-test-key/cloud-run-test-key
 
 WORKDIR /app/gcpdiag
-CMD gunicorn --workers 1 --threads 8 --timeout 0 --bind :8000 bin.wsgi:app
-# CMD python3 bin/wsgi.py
+# CMD gunicorn --workers 1 --threads 8 --timeout 0 --bind :8000 bin.wsgi:app
+CMD python3 bin/wsgi.py
 
 EXPOSE 8000
