@@ -118,7 +118,11 @@ def request_handler():
   except:
     raise Exception
 
-  final_data = lint_command.run(project)
+  try:
+    final_data = lint_command.run(project)
+  except Exception as e:
+    print(e)
+
   filtered_data = filtering(request_payload, final_data)
 
   if filtered_data:
