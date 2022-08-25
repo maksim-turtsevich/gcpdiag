@@ -57,8 +57,15 @@ def get_cache() -> diskcache.Cache:
   """Get a Diskcache.Cache object that can be used to cache data."""
   global _cache
   if not _cache:
-    _cache = diskcache.Cache(config.CACHE_DIR, tag_index=True)
-    # Make sure that we remove any data that wasn't cleaned up correctly for
+    while True:
+      try:
+        _cache = diskcache.Cache(config.CACHE_DIR, tag_index=True)
+        if _cache:
+          break
+      except Exception as e:
+        print(e)
+        pass
+    #  Make sure that we remove any data that wasn't cleaned up correctly for
     # some reason.
     _clean_cache()
     # Cleanup the cache at program exit.
