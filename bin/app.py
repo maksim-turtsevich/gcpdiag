@@ -108,12 +108,13 @@ def request_handler():
   request_payload = request.json
   project = request_payload["issue"]["fields"]["customfield_10169"]
 
+  print(os.getenv("jira_token"))
   try:
     final_data = lint_command.run(project)
   except Exception as e:
     print(e)
     raise Exception
-    
+
   filtered_data = filtering(request_payload, final_data)
 
   if filtered_data:
