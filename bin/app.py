@@ -40,7 +40,7 @@ resource_map = {
 def submit_to_jira(name_of_the_ticket, final_text):
 
   options = {'server': r"https://devoteamgcloud.atlassian.net/"}
-  jira = JIRA(basic_auth=("coe.gcp@devoteam.com", os.getenv("jira_token")), options=options)
+  jira = JIRA(basic_auth=("maksim.turtsevich@devoteam.com", os.getenv("jira_token")), options=options)
 
   comment = jira.add_comment(name_of_the_ticket, final_text, visibility={'key': 'sd.public.comment'},
                                is_internal=True)
