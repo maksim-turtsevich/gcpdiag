@@ -60,8 +60,8 @@ def get_cache() -> diskcache.Cache:
     while True:
       try:
         _cache = diskcache.Cache(config.CACHE_DIR, tag_index=True)
-        if _cache:
-          break
+        print(_cache)
+        break
       except Exception as e:
         print(e)
         pass
