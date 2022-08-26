@@ -26,6 +26,7 @@ import shutil
 import tempfile
 import threading
 from typing import List
+import os
 
 import diskcache
 
@@ -56,15 +57,16 @@ def _close_cache():
 def get_cache() -> diskcache.Cache:
   """Get a Diskcache.Cache object that can be used to cache data."""
   global _cache
+  amount_of_retries = 0
   if not _cache:
-    while True:
+    while amount_of_retries < 5:
       try:
         _cache = diskcache.Cache(config.CACHE_DIR, tag_index=True)
-        print(_cache)
         break
       except Exception as e:
-        print(e)
-        pass
+        print('Trying to handle the Exception')
+        os.system("chmod -cR 777 /tmp/.cache/gcpdiag")
+        amount_of_retries += 1
     #  Make sure that we remove any data that wasn't cleaned up correctly for
     # some reason.
     _clean_cache()
@@ -139,7 +141,8 @@ def cached_api_call(expire=None, in_memory=False):
   """
 
   def _cached_api_call_decorator(func):
-    lockdict = collections.defaultdict(threading.Lock)
+    lockdict = collections.defaultdict(threading.Lock) # Creates a default dict with default value of threading.Lock
+    # print("Strange dict: ", lockdict)
     if in_memory:
       lru_cached_func = functools.lru_cache()(func)
 
@@ -147,6 +150,9 @@ def cached_api_call(expire=None, in_memory=False):
     def _cached_api_call_wrapper(*args, **kwargs):
       key = _make_key(func, args, kwargs)
       lock = lockdict[key]
+      # print("Strange dict: ", lockdict)
+      # print("Strange key: ", key)
+      # print("Strange lock: ", lock)
       with _acquire_timeout(lock, config.CACHE_LOCK_TIMEOUT, func.__name__):
         if in_memory:
           return lru_cached_func(*args, **kwargs)

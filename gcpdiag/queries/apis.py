@@ -191,7 +191,7 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
 
   If project_id is specified, this will be used as the billed project, and usually
   you should put there the project id of the project that you are inspecting."""
-  credentials = _get_credentials()
+  credentials = _get_credentials() # Getting credentials (in our case adc)
 
   def _request_builder(http, *args, **kwargs):
     del http

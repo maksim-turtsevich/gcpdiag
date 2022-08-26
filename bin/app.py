@@ -110,11 +110,13 @@ def request_handler():
 
   try:
     print(os.path.exists("/tmp/.cache/gcpdiag"))
-    print("Reading: ", os.access('my_folder', os.R_OK)) # Check for read access
+    print("Reading: ", os.access("/tmp/.cache/gcpdiag", os.R_OK)) # Check for read access
+    os.chmod("/tmp/.cache/gcpdiag", 0o777)
+    print("Reading: ", os.access("/tmp/.cache/gcpdiag", os.R_OK)) # Check for read access
 
-    print("Writing", os.access('my_folder', os.W_OK))
+    print("Writing", os.access("/tmp/.cache/gcpdiag", os.W_OK))
 
-    print("Execution:", os.access('my_folder', os.X_OK)) # Check for execution  
+    print("Execution:", os.access("/tmp/.cache/gcpdiag", os.X_OK)) # Check for execution  
   except:
     raise Exception
 
