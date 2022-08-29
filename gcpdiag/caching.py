@@ -161,19 +161,30 @@ def cached_api_call(expire=None, in_memory=False):
         if in_memory:
           return lru_cached_func(*args, **kwargs)
         else:
-          api_cache = get_cache()
+          
+          try:
+            api_cache = get_cache()
           # We use 'no data' to be able to cache calls that returned None.
-          cached_result = api_cache.get(key, default='no data')
+            cached_result = api_cache.get(key, default='no data')
+          except Exception as e:
+            print(f"Exception {e} occured continuing")
+            cached_result = "no data"
+
           if cached_result != 'no data':
             logging.debug('returning cached result for %s', func.__name__)
             return cached_result
           logging.debug('calling function %s (expire=%s, key=%s)',
                         func.__name__, expire, key)
           result = func(*args, **kwargs)
-          if expire:
-            api_cache.set(key, result, expire=expire)
-          else:
-            api_cache.set(key, result, tag='tmp')
+
+          try:
+            if expire:
+              api_cache.set(key, result, expire=expire)
+            else:
+              api_cache.set(key, result, tag='tmp')
+          except:
+            pass
+
           return result
 
     return _cached_api_call_wrapper
