@@ -6,7 +6,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/gcp-coe-msp-sandbox/gcpdiag:latest']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['run', 'deploy', 'gcpdiag-prod', '--image=gcr.io/gcp-coe-msp-sandbox/gcpdiag:latest', '--update-secrets=jira_token=jira-token:2', '--region=europe-central2', '--port=8000', '--memory=2Gi']
+  args: ['run', 'deploy', 'gcpdiag-prod', '--image=gcr.io/gcp-coe-msp-sandbox/gcpdiag:latest', '--update-secrets=jira_token=jira-token:2', '--region=europe-central2', '--port=8000', '--memory=4Gi', '--cpu=2', '--max-instances=5']
 
 options:
   logging: CLOUD_LOGGING_ONLY
