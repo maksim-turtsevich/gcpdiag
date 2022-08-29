@@ -67,6 +67,10 @@ def get_cache() -> diskcache.Cache:
         print('Trying to handle the Exception')
         os.system("chmod -cR 777 /tmp/.cache/gcpdiag")
         amount_of_retries += 1
+
+        if amount_of_retries == 5:
+          print(e)
+          raise Exception
     #  Make sure that we remove any data that wasn't cleaned up correctly for
     # some reason.
     _clean_cache()
