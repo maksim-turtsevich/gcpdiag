@@ -24,6 +24,8 @@ import httplib2
 # pylint: disable=unused-argument
 
 JSON_PROJECT_DIR = {
+    'gcpdiag-apigee1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
     'gcpdiag-gce1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     'gcpdiag-bigquery1-aaaa':
@@ -38,10 +40,10 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
     'gcpdiag-gcs1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gcs1/json-dumps',
+    'gcpdiag-datafusion1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/datafusion1/json-dumps',
     'gcpdiag-dataproc1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
-    'gcpdiag-apigee1-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
     'gcpdiag-composer1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
     'gcpdiag-cloudsql1-aaaa':
@@ -61,7 +63,9 @@ JSON_PROJECT_DIR = {
     'gcpdiag-tpu1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/tpu1/json-dumps',
     'gcpdiag-iam1-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/iam1/json-dumps'
+        pathlib.Path(__file__).parents[2] / 'test-data/iam1/json-dumps',
+    'gcpdiag-cloudrun1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudrun1/json-dumps'
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -129,7 +133,7 @@ class RestCallStub(ApiStub):
       if self.default is not None:
         return self.default
       if self.default_json_basename is not None:
-        with open(self.json_dir / self.default_json_basename + '.json',
+        with open(str(self.json_dir / self.default_json_basename) + '.json',
                   encoding='utf-8') as json_file:
           return json.load(json_file)
       raise
@@ -246,6 +250,9 @@ def get_api_stub(service_name: str,
   elif service_name == 'cloudfunctions':
     from gcpdiag.queries import gcf_stub
     return gcf_stub.CloudFunctionsApiStub()
+  elif service_name == 'datafusion':
+    from gcpdiag.queries import datafusion_stub
+    return datafusion_stub.DataFusionApiStub()
   elif service_name == 'dataproc':
     from gcpdiag.queries import dataproc_stub
     return dataproc_stub.DataprocApiStub()
@@ -277,5 +284,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'artifactregistry':
     from gcpdiag.queries import artifact_registry_stub
     return artifact_registry_stub.ArtifactRegistryApiStub()
+  elif service_name == 'run':
+    from gcpdiag.queries import cloudrun_stub
+    return cloudrun_stub.CloudRunApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

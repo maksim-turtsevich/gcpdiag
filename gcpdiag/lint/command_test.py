@@ -38,7 +38,6 @@ class Test:
     assert args.billing_project is None
     assert args.auth_adc is False
     assert args.auth_key is None
-    assert args.auth_oauth is False
     assert args.verbose == 0
     assert args.within_days == 3
     assert args.include is None
@@ -79,6 +78,7 @@ class Test:
     assert 'iam' in modules
     assert 'apigee' in modules
     assert 'composer' in modules
+    assert 'datafusion' in modules
     assert 'dataproc' in modules
     assert 'gcs' in modules
     assert 'vpc' in modules

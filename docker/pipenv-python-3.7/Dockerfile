@@ -24,6 +24,7 @@ RUN apt-get update && \
         bash \
         curl \
         git \
+        gnupg \
         binutils \
         make
 
@@ -31,6 +32,11 @@ RUN apt-get update && \
 RUN curl https://releases.hashicorp.com/terraform/1.0.8/terraform_1.0.8_linux_amd64.zip | \
     gunzip - >/usr/bin/terraform && \
     chmod +x /usr/bin/terraform
+
+# Note: we install Cloud SDK in the python-3.9 image because we
+# use that image also for interactive development, but we don't need that
+# for the python-3.7 image (and adding Cloud SDK considerably increases the
+# image size).
 
 # Add an entrypoint to create a user in /etc/passwd and /etc/group.
 COPY entrypoint.sh /usr/bin/entrypoint.sh

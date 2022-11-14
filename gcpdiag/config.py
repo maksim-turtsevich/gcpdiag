@@ -23,7 +23,7 @@ import appdirs
 import yaml
 
 # gcpdiag version (not configurable, but useful to have here)
-VERSION = '0.57-test'
+VERSION = '0.59-test'
 """
 Configuration properties are divided into 3 main categories:
 - static (class properties) which values cannot be changed or provided
@@ -82,7 +82,6 @@ _project_id: str = ''
 _defaults: Dict[str, Any] = {
     'auth_adc': False,
     'auth_key': None,
-    'auth_oauth': False,
     'billing_project': None,
     'show_skipped': False,
     'hide_ok': False,
